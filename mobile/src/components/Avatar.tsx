@@ -1,0 +1,4 @@
+/** Cached circular avatar with initials fallback. */
+import React from "react"; import { StyleSheet, Text, View } from "react-native"; import { Image } from "expo-image"; import { colors } from "../constants/theme";
+export function Avatar({ uri, name, size = 52 }: { uri?: string | null; name: string; size?: number }) { return uri ? <Image source={{ uri }} cachePolicy="memory-disk" contentFit="cover" style={{ width: size, height: size, borderRadius: size / 2 }} accessibilityLabel={`${name} avatar`} /> : <View style={[styles.fallback, { width: size, height: size, borderRadius: size / 2 }]}><Text style={{ color: colors.primary, fontWeight: "700", fontSize: size * 0.35 }}>{name.split(" ").map(v => v[0]).slice(0, 2).join("").toUpperCase()}</Text></View>; }
+const styles = StyleSheet.create({ fallback: { backgroundColor: colors.tint, alignItems: "center", justifyContent: "center" } });

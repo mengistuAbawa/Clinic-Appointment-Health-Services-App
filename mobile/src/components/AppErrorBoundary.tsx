@@ -1,0 +1,5 @@
+/** Catches render-time failures and offers a safe navigation reset. */
+import React from "react"; import { StyleSheet, Text, View } from "react-native"; import { Button } from "./Button"; import { colors } from "../constants/theme";
+interface State { hasError: boolean; }
+export class AppErrorBoundary extends React.Component<React.PropsWithChildren, State> { state: State = { hasError: false }; static getDerivedStateFromError(): State { return { hasError: true }; } componentDidCatch(error: Error): void { console.error("Unhandled screen error", error); } render() { if (this.state.hasError) return <View style={styles.root}><Text style={styles.title}>This screen ran into a problem</Text><Text style={styles.message}>Return to clinics and try again.</Text><Button title="Reload screen" onPress={() => this.setState({ hasError: false })} /></View>; return this.props.children; } }
+const styles = StyleSheet.create({ root: { flex: 1, justifyContent: "center", padding: 24, gap: 16, backgroundColor: colors.background }, title: { fontSize: 20, fontWeight: "700", color: colors.text }, message: { color: colors.muted } });

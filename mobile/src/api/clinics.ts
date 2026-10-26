@@ -1,0 +1,3 @@
+/** Clinic and provider catalog API methods. */
+import { client } from "./client"; import { Clinic, Page, Provider, Slot } from "../types";
+export const clinicsApi = { list: async (params: Record<string, string | number | undefined>) => (await client.get<Page<Clinic>>("/clinics", { params })).data, get: async (id: string) => (await client.get<Clinic>(`/clinics/${id}`)).data, provider: async (id: string) => (await client.get<Provider>(`/providers/${id}`)).data, slots: async (id: string, date: string) => (await client.get<{ data: Slot[] }>(`/providers/${id}/slots`, { params: { date } })).data.data };

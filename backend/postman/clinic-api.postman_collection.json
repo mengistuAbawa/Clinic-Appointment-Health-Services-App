@@ -1,0 +1,93 @@
+{
+  "info": {
+    "name": "Clinic Appointment API",
+    "description": "Requests for the local clinic API. Run login first to populate the token variables.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000/api" },
+    { "key": "accessToken", "value": "" },
+    { "key": "refreshToken", "value": "" },
+    { "key": "clinicId", "value": "" },
+    { "key": "providerId", "value": "" },
+    { "key": "slotId", "value": "" },
+    { "key": "appointmentId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        { "name": "Health check", "request": { "method": "GET", "url": "http://localhost:3000/health" } },
+        { "name": "OpenAPI docs", "request": { "method": "GET", "url": "{{baseUrl}}/docs" } }
+      ]
+    },
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register patient",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"patient@example.com\",\n  \"password\": \"Password123!\",\n  \"name\": \"Demo Patient\",\n  \"phone\": \"+251911000000\"\n}" },
+            "url": "{{baseUrl}}/auth/register"
+          }
+        },
+        {
+          "name": "Login demo patient",
+          "event": [{ "listen": "test", "script": { "exec": ["const result = pm.response.json();", "if (result.accessToken) pm.collectionVariables.set('accessToken', result.accessToken);", "if (result.refreshToken) pm.collectionVariables.set('refreshToken', result.refreshToken);"] } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"patient@demo.com\",\n  \"password\": \"Password123!\"\n}" },
+            "url": "{{baseUrl}}/auth/login"
+          }
+        },
+        {
+          "name": "Refresh tokens",
+          "event": [{ "listen": "test", "script": { "exec": ["const result = pm.response.json();", "if (result.accessToken) pm.collectionVariables.set('accessToken', result.accessToken);", "if (result.refreshToken) pm.collectionVariables.set('refreshToken', result.refreshToken);"] } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}" },
+            "url": "{{baseUrl}}/auth/refresh"
+          }
+        },
+        {
+          "name": "Logout",
+          "request": { "method": "POST", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}" }, "url": "{{baseUrl}}/auth/logout" }
+        }
+      ]
+    },
+    {
+      "name": "Discovery",
+      "item": [
+        { "name": "Search clinics", "request": { "method": "GET", "url": "{{baseUrl}}/clinics?search=&category=&page=1&limit=10&sort=name" } },
+        { "name": "Clinics near coordinates", "request": { "method": "GET", "url": "{{baseUrl}}/clinics?sort=distance&lat=9.0192&lng=38.7525&page=1&limit=10" } },
+        { "name": "Clinic detail", "request": { "method": "GET", "url": "{{baseUrl}}/clinics/{{clinicId}}" } },
+        { "name": "Provider detail", "request": { "method": "GET", "url": "{{baseUrl}}/providers/{{providerId}}" } },
+        { "name": "Provider slots by date", "request": { "method": "GET", "url": "{{baseUrl}}/providers/{{providerId}}/slots?date=2026-10-23" } }
+      ]
+    },
+    {
+      "name": "Appointments",
+      "item": [
+        { "name": "Book slot", "request": { "method": "POST", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"slotId\": \"{{slotId}}\",\n  \"notes\": \"First visit\"\n}" }, "url": "{{baseUrl}}/appointments" } },
+        { "name": "List upcoming appointments", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }], "url": "{{baseUrl}}/appointments?status=upcoming&page=1&limit=10" } },
+        { "name": "Appointment detail", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }], "url": "{{baseUrl}}/appointments/{{appointmentId}}" } },
+        { "name": "Cancel appointment", "request": { "method": "PATCH", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }], "url": "{{baseUrl}}/appointments/{{appointmentId}}/cancel" } }
+      ]
+    },
+    {
+      "name": "Favorites and profile",
+      "item": [
+        { "name": "List favorites", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }], "url": "{{baseUrl}}/favorites" } },
+        { "name": "Add favorite", "request": { "method": "POST", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }], "url": "{{baseUrl}}/favorites/{{clinicId}}" } },
+        { "name": "Remove favorite", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }], "url": "{{baseUrl}}/favorites/{{clinicId}}" } },
+        { "name": "Get profile", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }], "url": "{{baseUrl}}/users/me" } },
+        { "name": "Update profile", "request": { "method": "PUT", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"name\": \"Demo Patient\",\n  \"phone\": \"+251911000000\"\n}" }, "url": "{{baseUrl}}/users/me" } },
+        { "name": "Delete profile", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }], "url": "{{baseUrl}}/users/me" } }
+      ]
+    }
+  ]
+}

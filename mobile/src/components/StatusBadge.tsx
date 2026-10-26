@@ -1,0 +1,4 @@
+/** Appointment status badge with color contrast for each lifecycle state. */
+import React from "react"; import { StyleSheet, Text, View } from "react-native"; import { AppointmentStatus } from "../types"; import { colors, radius } from "../constants/theme";
+export function StatusBadge({ status }: { status: AppointmentStatus }) { const backgroundColor = status === "CONFIRMED" ? "#DDF3E7" : status === "CANCELLED" ? "#FDE7E6" : "#E8EDF2"; const color = status === "CONFIRMED" ? colors.success : status === "CANCELLED" ? colors.danger : colors.muted; return <View style={[styles.badge, { backgroundColor }]}><Text style={{ color, fontWeight: "700", fontSize: 12 }}>{status}</Text></View>; }
+const styles = StyleSheet.create({ badge: { borderRadius: radius.pill, paddingVertical: 5, paddingHorizontal: 9, alignSelf: "flex-start" } });

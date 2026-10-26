@@ -1,0 +1,3 @@
+/** Appointment history, booking, and cancellation API methods. */
+import { client } from "./client"; import { Appointment, Page } from "../types";
+export const appointmentsApi = { list: async (params: { status?: "upcoming" | "past"; page?: number }) => (await client.get<Page<Appointment>>("/appointments", { params })).data, get: async (id: string) => (await client.get<Appointment>(`/appointments/${id}`)).data, create: async (slotId: string) => (await client.post<Appointment>("/appointments", { slotId })).data, cancel: async (id: string) => (await client.patch<Appointment>(`/appointments/${id}/cancel`)).data };

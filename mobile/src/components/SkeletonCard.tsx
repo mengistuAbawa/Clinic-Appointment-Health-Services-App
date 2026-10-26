@@ -1,0 +1,4 @@
+/** Accessible placeholder card used while content is loading. */
+import React from "react"; import { StyleSheet, View } from "react-native"; import { colors, radius, spacing } from "../constants/theme";
+export function SkeletonCard() { return <View accessibilityLabel="Loading clinic" style={styles.card}><View style={styles.image} /><View style={styles.line} /><View style={styles.shortLine} /></View>; }
+const styles = StyleSheet.create({ card: { borderRadius: radius.md, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface, paddingBottom: spacing.md, marginBottom: spacing.md, overflow: "hidden" }, image: { height: 140, backgroundColor: "#E6EEEB" }, line: { height: 16, width: "70%", borderRadius: 8, backgroundColor: "#E6EEEB", marginTop: spacing.md, marginHorizontal: spacing.md }, shortLine: { height: 12, width: "48%", borderRadius: 8, backgroundColor: "#E6EEEB", marginTop: spacing.sm, marginHorizontal: spacing.md } });

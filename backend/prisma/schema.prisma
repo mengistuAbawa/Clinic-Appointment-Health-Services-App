@@ -1,0 +1,116 @@
+// ──────────────────────────────────────────────
+// Prisma Schema — Clinic Appointment & Health Services
+// ──────────────────────────────────────────────
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ── Enums ──────────────────────────────────────
+
+enum Role {
+  PATIENT
+  ADMIN
+}
+
+enum AppointmentStatus {
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
+
+// ── Models ─────────────────────────────────────
+
+model User {
+  id            String        @id @default(cuid())
+  email         String        @unique
+  passwordHash  String
+  name          String
+  phone         String?
+  avatarUrl     String?
+  role          Role          @default(PATIENT)
+  refreshToken  String?
+  createdAt     DateTime      @default(now())
+  deletedAt     DateTime?
+
+  appointments  Appointment[]
+  favorites     Favorite[]
+
+  @@map("users")
+}
+
+model Clinic {
+  id        String     @id @default(cuid())
+  name      String
+  address   String
+  latitude  Float
+  longitude Float
+  phone     String
+  imageUrl  String?
+  category  String
+  createdAt DateTime   @default(now())
+
+  providers Provider[]
+  favorites Favorite[]
+
+  @@map("clinics")
+}
+
+model Provider {
+  id           String        @id @default(cuid())
+  name         String
+  specialty    String
+  bio          String
+  imageUrl     String?
+  clinicId     String
+  clinic       Clinic        @relation(fields: [clinicId], references: [id], onDelete: Cascade)
+
+  slots        Slot[]
+  appointments Appointment[]
+
+  @@map("providers")
+}
+
+model Slot {
+  id         String       @id @default(cuid())
+  providerId String
+  provider   Provider     @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  startTime  DateTime
+  endTime    DateTime
+  isBooked   Boolean      @default(false)
+
+  appointment Appointment?
+
+  @@map("slots")
+}
+
+model Appointment {
+  id         String            @id @default(cuid())
+  userId     String
+  user       User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  providerId String
+  provider   Provider          @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  slotId     String            @unique
+  slot       Slot              @relation(fields: [slotId], references: [id], onDelete: Cascade)
+  status     AppointmentStatus @default(CONFIRMED)
+  notes      String?
+  createdAt  DateTime          @default(now())
+
+  @@map("appointments")
+}
+
+model Favorite {
+  id       String @id @default(cuid())
+  userId   String
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  clinicId String
+  clinic   Clinic @relation(fields: [clinicId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, clinicId])
+  @@map("favorites")
+}

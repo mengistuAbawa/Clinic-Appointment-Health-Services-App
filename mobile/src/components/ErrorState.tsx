@@ -1,0 +1,4 @@
+/** Retry state with an actionable message for failed list and detail loads. */
+import React from "react"; import { StyleSheet, Text, View } from "react-native"; import { MaterialCommunityIcons } from "@expo/vector-icons"; import { colors, spacing } from "../constants/theme"; import { Button } from "./Button";
+export function ErrorState({ message, onRetry }: { message: string; onRetry: () => void }) { return <View style={styles.root}><MaterialCommunityIcons name="alert-circle-outline" size={44} color={colors.danger} /><Text style={styles.message}>{message}</Text><Button title="Retry" onPress={onRetry} variant="secondary" /></View>; }
+const styles = StyleSheet.create({ root: { flex: 1, alignItems: "center", justifyContent: "center", padding: spacing.xl, gap: spacing.md }, message: { color: colors.text, textAlign: "center" } });

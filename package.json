@@ -1,0 +1,29 @@
+{
+  "name": "clinic-appointment-health-services",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Clinic Appointment & Health Services full-stack monorepo (Expo, Express, and Prisma)",
+  "workspaces": [
+    "backend",
+    "mobile"
+  ],
+  "scripts": {
+    "dev": "node \"node_modules/concurrently/dist/bin/concurrently.js\" -n backend,mobile -c blue,green \"npm run dev --workspace=backend\" \"npm run web --workspace=mobile\"",
+    "backend:dev": "npm run dev --workspace=backend",
+    "backend:build": "npm run build --workspace=backend",
+    "backend:seed": "npm run seed --workspace=backend",
+    "backend:migrate": "npm run migrate --workspace=backend",
+    "mobile:start": "npm run start --workspace=mobile --",
+    "mobile:android": "npm run android --workspace=mobile",
+    "mobile:ios": "npm run ios --workspace=mobile",
+    "mobile:build": "npm run build:preview --workspace=mobile",
+    "mobile:build:production": "npm run build:production --workspace=mobile",
+    "postinstall": "npm run generate --workspace=backend"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=22.13.0"
+  }
+}
