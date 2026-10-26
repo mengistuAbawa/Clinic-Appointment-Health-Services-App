@@ -1,6 +1,4 @@
-﻿# Clinic Appointment & Health Services
-
-ClinicCare is a modern healthcare mobile app that helps patients find clinics, explore healthcare providers, check availability, book and manage appointments, save favorite doctors, receive notifications, view appointment history, and access clinic locations through a secure, user-friendly platform.
+# Clinic Appointment & Health Services
 
 A TypeScript monorepo with an Expo Router patient app and an Express/Prisma API.
 
